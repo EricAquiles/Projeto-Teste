@@ -13,9 +13,11 @@ if (paginaAtual.includes("listaAtividades.html")) {
         if (!tbody) return;
         
         try {
+            // Busca os dados da API com o número de inscrições e vagas
             const informacoesParaParticipantes = await numeroInscricoes();
             tbody.innerHTML = "";
 
+            // Cria as linhas da tabela dinamicamente para cada atividade
             informacoesParaParticipantes.forEach(atividade => {
                 const linhas = document.createElement('tr');
                 const vagasDisponiveis = atividade.vagas - atividade.total_inscricoes;
@@ -31,10 +33,11 @@ if (paginaAtual.includes("listaAtividades.html")) {
                 tbody.appendChild(linhas);
             });
 
-            // Adiciona o evento de clique nos botões gerados dinamicamente
+            // Adiciona o evento de clique nos botões "Saiba Mais" gerados na tabela
             document.querySelectorAll('.btn-saiba-mais').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const idAtividade = e.target.getAttribute('data-id');
+                    // Salva o ID da atividade selecionada no sessionStorage para usar na próxima tela
                     sessionStorage.setItem("atividadeSelecionada", idAtividade);
                     window.location.href = "descricao.html";
                 });
@@ -55,12 +58,13 @@ if (paginaAtual.includes("listaAtividades.html")) {
 if (paginaAtual.includes("descricao.html")) {
     const desc = document.getElementById('tabelaDescricao');
 
-    // Mostrar a Descrição da Atividade Selecionada
+    // Função para buscar e mostrar a descrição da atividade selecionada
     async function mostrarDescricao() {
         if (!desc) return;
         
         const atividadeSelecionada = sessionStorage.getItem("atividadeSelecionada");
 
+        // Validação de segurança: Se o usuário entrar direto na descrição sem selecionar nenhuma atividade
         if (!atividadeSelecionada) {
             alert("Nenhuma atividade selecionada!");
             window.location.href = "listaAtividades.html";
@@ -76,7 +80,7 @@ if (paginaAtual.includes("descricao.html")) {
                 linha.innerHTML = `
                     <td>${item.descricao}</td>
                     <td>
-                        <!-- Dispara o modal de pergunta "Você já possui cadastro?" -->
+                        <!-- Botão que dispara o 1º modal: "Você já possui cadastro?" -->
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPossuiCadastro">
                             Inscrever-se
                         </button>
@@ -91,17 +95,21 @@ if (paginaAtual.includes("descricao.html")) {
 
     mostrarDescricao();
 
-    // Cadastro de Participante caso não possua
+    // ==========================================
+    // CADASTRO DE PARTICIPANTE (Caso não possua cadastro)
+    // ==========================================
     const formParticipante = document.getElementById('participante');
     if (formParticipante) {
         formParticipante.addEventListener('submit', async (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Evita o recarregamento padrão da página
 
+            // Captura os valores digitados nos inputs do formulário de cadastro
             const nomeParticipante = document.getElementById('nomeParticipante').value;
             const email = document.getElementById('email').value;
             const telefone = document.getElementById('telefone').value;
             const senha = document.getElementById('senha').value;
 
+            // Validação simples via JavaScript (complementar ao 'required' do HTML)
             if (!nomeParticipante || !email || !telefone || !senha) {
                 alert('Preencha todos os campos!');
                 return;
@@ -110,21 +118,23 @@ if (paginaAtual.includes("descricao.html")) {
             const dados = { nomeParticipante, email, telefone, senha };
 
             try {
+                // Envia os dados para a API para cadastrar o participante
                 const resposta = await cadastrarParticipante(dados);
                 console.log(resposta.mensagem);  
 
-                formParticipante.reset();  
+                formParticipante.reset(); // Limpa o formulário
 
+                // Salva o ID do participante recém-cadastrado no sessionStorage
                 sessionStorage.setItem("participanteCadastrado", resposta.id_participantes);
                 
-                // Fecha o modal de cadastro atual com segurança
+                // Fecha com segurança o modal de cadastro atual usando a API do Bootstrap 5
                 const modalCadastroEl = document.getElementById('modalCadastroParticipante');
                 const modalCadastroInstance = bootstrap.Modal.getInstance(modalCadastroEl);
                 if (modalCadastroInstance) {
                     modalCadastroInstance.hide();
                 }
 
-                // Abre o segundo pop-up (modal de confirmação final) após cadastrar com sucesso
+                // Abre automaticamente o segundo modal (confirmação final da inscrição)
                 const modalConfirmarEl = document.getElementById('modalConfirmarInscricao');
                 if (modalConfirmarEl) {
                     const modalConfirmar = new bootstrap.Modal(modalConfirmarEl);
@@ -138,17 +148,15 @@ if (paginaAtual.includes("descricao.html")) {
         });
     }
 
-    // Cadastrar atividade do participante sem Acesso (Confirmação final no modal)
-    const btnConfirmar = document.getElementById('btnConfirmarInscricaoSim'); 
-    if (btnConfirmar) {
-        // Evita duplicação de eventos clonando o nó do botão de forma segura
-        const novoBtnConfirmar = btnConfirmar.cloneNode(true);
-        btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
-
-        // Ajustado para escutar o ID correto do botão no HTML
-        document.getElementById('btnConfirmarInscricaoSim').addEventListener('click', async (event) => {
+    // ==========================================
+    // CONFIRMAÇÃO FINAL DA INSCRIÇÃO
+    // ==========================================
+    const btnConfirmarInscricaoSim = document.getElementById('btnConfirmarInscricaoSim'); 
+    if (btnConfirmarInscricaoSim) {
+        btnConfirmarInscricaoSim.addEventListener('click', async (event) => {
             event.preventDefault();
             
+            // Recupera os IDs necessários salvos na sessão
             const id_atividade = sessionStorage.getItem("atividadeSelecionada");
             const id_participante = sessionStorage.getItem("participanteCadastrado");
 
@@ -160,9 +168,11 @@ if (paginaAtual.includes("descricao.html")) {
             const dados = { id_atividade, id_participante };
 
             try {
+                // Efetiva a inscrição do participante sem acesso prévio
                 const resposta = await realizarInscricaoSemLogar(dados);
                 console.log(resposta.mensagem);
                 
+                // Altera o conteúdo interno do modal para exibir a mensagem de sucesso e o botão de retorno
                 const modalBody = document.querySelector('#modalConfirmarInscricao .modal-body');
                 if (modalBody) {
                     modalBody.innerHTML = `
@@ -170,6 +180,7 @@ if (paginaAtual.includes("descricao.html")) {
                         <button id="btnVoltarLista" class="btn btn-primary px-4">Voltar para a Lista</button>
                     `;
                     
+                    // Adiciona evento de clique no botão gerado dinamicamente para voltar à listagem
                     document.getElementById('btnVoltarLista').addEventListener('click', () => {
                         window.location.href = "listaAtividades.html";
                     });
@@ -184,4 +195,3 @@ if (paginaAtual.includes("descricao.html")) {
         });
     }
 }
-
