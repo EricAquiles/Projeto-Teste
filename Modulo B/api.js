@@ -139,6 +139,14 @@ export async function listarInscricoesPorEmail(email) {
     return await resposta.json();
 }
 
+export async function deletarInscricao(id_inscricao) {
+
+    const resposta = await fetch(`${URL}/inscricoes/${id_inscricao}`, {
+        method: 'DELETE'
+    });
+    return await resposta.json();
+}
+
 // API para Participante Logado
 
 export async function buscarInscricao(dados) {

@@ -291,11 +291,13 @@ router.delete("/atividade/:id_atividade", async (req, res) => {
 
 // Por atividade
 
+// Por atividade
 router.get("/inscricoes/atividade/:id_atividade", async (req, res) => {
     const { id_atividade } = req.params;
     try {
         const [linhas] = await pool.query(
             `select 
+                i.id_inscricao, 
                 p.nome_participante, 
                 p.email, 
                 a.nome_atividade 
@@ -313,12 +315,12 @@ router.get("/inscricoes/atividade/:id_atividade", async (req, res) => {
 });
 
 // Por Email
-
 router.get("/inscricoes/participante", async (req, res) => {
     const { email } = req.query;
     try {
         const [linhas] = await pool.query(
             `select 
+                i.id_inscricao, 
                 p.nome_participante, 
                 p.email, 
                 a.nome_atividade 
@@ -332,6 +334,47 @@ router.get("/inscricoes/participante", async (req, res) => {
     } catch (erro) {
         console.error("ERRO AO BUSCAR INSCRIÇÕES POR EMAIL: ", erro);
         res.status(500).json({ erro: "Erro interno no servidor" });
+    }
+});
+
+// Exemplo da rota que busca inscrições (ajuste conforme a sua)
+router.get('/inscricoes/atividade/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [linhas] = await pool.query(
+            `SELECT i.id_inscricao, p.nome_participante, p.email, a.nome_atividade 
+             FROM inscricoes i
+             JOIN participantes p ON i.id_participante = p.id_participante
+             JOIN atividades a ON i.id_atividade = a.id_atividade
+             WHERE i.id_atividade = ?`, 
+            [id]
+        );
+        res.json(linhas);
+    } catch (erro) {
+        res.status(500).json({ erro: "Erro ao listar inscrições" });
+    }
+});
+
+// Rota para deletar uma inscrição pelo ID
+router.delete("/inscricoes/:id_inscricao", async (req, res) => {
+    const { id_inscricao } = req.params;
+
+    try {
+        const [resultado] = await pool.query(
+            `DELETE FROM inscricoes WHERE id_inscricao = ?`, 
+            [id_inscricao]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ mensagem: "Inscrição não encontrada." });
+        }
+
+        res.json({
+            mensagem: "Inscrição excluída com sucesso!"
+        });
+    } catch (erro) {
+        console.error('ERRO AO EXCLUIR A Inscrição: ', erro);
+        res.status(500).json({ erro: "Erro ao excluir inscrição no banco de dados." });
     }
 });
 

@@ -1,4 +1,6 @@
-import { listarAtividades, listarInscricoesPorAtividade, listarInscricoesPorEmail } from "../../api.js";
+import { listarAtividades, listarInscricoesPorAtividade, listarInscricoesPorEmail, deletarInscricao } from "../../api.js";
+
+const tbody = document.getElementById('tbodyInscricoes');
 
 // 1. Carrega as atividades no <select> assim que a página abre
 async function inicializarSelectAtividades() {
@@ -40,7 +42,6 @@ radios.forEach(radio => {
 // 3. Ação do Botão de Pesquisar
 document.getElementById('btnPesquisar').addEventListener('click', async () => {
     const tipoSelecionado = document.querySelector('input[name="tipoFiltro"]:checked').value;
-    const tbody = document.getElementById('tbodyInscricoes');
     tbody.innerHTML = ""; 
 
     let dados = [];
@@ -63,15 +64,48 @@ document.getElementById('btnPesquisar').addEventListener('click', async () => {
 
     if (dados && dados.length > 0) {
         dados.forEach(item => {
+            console.log("Dados do item:", item);
             const linha = document.createElement('tr');
+            
+            // ATENÇÃO: Ajuste 'item.id_inscricao' caso a sua API retorne outro nome para o ID da inscrição (ex: item.id)
             linha.innerHTML = `
                 <td>${item.nome_participante}</td>
                 <td>${item.email}</td>
                 <td>${item.nome_atividade}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" data-id="${item.id_inscricao}" data-acao="excluir">Excluir</button>
+                </td>
             `;
             tbody.appendChild(linha);
         });
     } else {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhuma inscrição encontrada.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Nenhuma inscrição encontrada.</td></tr>`;
     }
 });
+
+// 4. Delegação de Eventos para Excluir Inscrição
+if (tbody) {
+    tbody.addEventListener('click', async (event) => {
+        const target = event.target;
+        const acao = target.getAttribute('data-acao');
+        const idInscricao = target.getAttribute('data-id');
+
+        if (!acao || !idInscricao) return;
+
+        if (acao === "excluir") {
+            const confirmar = confirm('Tem certeza que deseja excluir esta inscrição?');
+            if (!confirmar) return;
+
+            try {
+                const resposta = await deletarInscricao(idInscricao);
+                alert(resposta?.mensagem || "Inscrição excluída com sucesso!");
+                
+                // Refaz a pesquisa automaticamente para atualizar a tabela
+                document.getElementById('btnPesquisar').click();
+            } catch (erro) {
+                console.error('ERRO AO EXCLUIR INSCRIÇÃO: ', erro);
+                alert('Ocorreu um erro ao tentar excluir a inscrição.');
+            }
+        }
+    });
+}
