@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Festiva Viva - Gerenciar Atividades</title>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Festiva Viva - Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminParticipante.html">Participantes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminAtividade.html">Atividades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminInscricoes.html">Inscrições</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <h2 class="mb-4">Painel Administrativo - Gerenciar Atividades</h2>
+
+        <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO -->
+        <div class="card shadow-sm p-4 mb-5">
+            <h4 class="mb-3">Cadastrar / Atualizar Atividade</h4>
+            <form id="atividades">
+                <div class="mb-3">
+                    <label for="nomeAtividade" class="form-label">Nome da Atividade</label>
+                    <input type="text" class="form-control" id="nomeAtividade" required>
+                </div>
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="descricao" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="vagas" class="form-label">Vagas Totais</label>
+                    <input type="number" class="form-control" id="vagas" required>
+                </div>
+                
+                <button type="submit" id="btnConfirmarCadastro" class="btn btn-primary px-4">Confirmar</button>
+            </form>
+        </div>
+
+        <!-- TABELA DE VISUALIZAÇÃO DAS ATIVIDADES -->
+        <div class="card shadow-sm p-4">
+            <h4 class="mb-3">Lista de Atividades Cadastradas</h4>
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Vagas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAtividades">
+                    <!-- Os dados da API entram aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../../Modulo B/Arquivo_JS/ADMINISTRATIVO/atividade.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Festiva Viva - Descrição da Atividade</title>
+</head>
+<body>
+
+    <button id="btnSair" class="btn btn-danger">Sair</button>
+    
+    <div class="container mt-5">
+        <h1>Descritivo da Atividade</h1>
+        <table class="table">
+            <tbody id="tabelaDescricao"></tbody>
+        </table>    
+        <a href="homeLogado.html" class="btn btn-secondary mt-3">Voltar para a Lista</a>
+    </div>
+
+    <!-- POP-UP DE CONFIRMAÇÃO DE INSCRIÇÃO (Com o ID id="confirmarInscricao" que o seu JS escuta) -->
+    <div class="modal fade" id="modalConfirmarInscricao" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-3">
+                <div class="modal-body">
+                    <p class="fs-5 mb-4">Deseja confirmar sua inscrição nesta atividade?</p>
+                    <button id="confirmarInscricao" class="btn btn-success px-4 me-2">Sim</button>
+                    <button class="btn btn-secondary px-4" data-bs-dismiss="modal">Não</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- O seu arquivo de lógica que já está pronto -->
+    <script type="module" src="../../Modulo B/Arquivo_JS/PARTICIPANTE LOGADO/participanteLogado.js"></script>
+</body>
+</html>

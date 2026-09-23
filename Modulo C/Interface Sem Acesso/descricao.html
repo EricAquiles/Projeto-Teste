@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Festival Viva - Descrição da Atividade</title>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Descritivo da Atividade</h1>
+        
+        <table class="table">
+            <tbody id="tabelaDescricao"></tbody>
+        </table>    
+
+        <a href="listaAtividades.html" class="btn btn-secondary mt-3">Voltar para
+        a Lista</a>
+    </div>
+
+    <!-- 1º MODAL: Pergunta se já possui cadastro -->
+    <div class="modal fade" id="modalPossuiCadastro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body">
+                    <p class="fs-5 mb-4">Você já possui cadastro?</p>
+                    <!-- SIM: Vai para a tela de login -->
+                    <button id="btnSimLogin" class="btn btn-success px-4 me-2">Sim</button>
+                    <!-- NÃO: Fecha este modal e abre o de cadastro -->
+                    <button type="button" class="btn btn-danger px-4" data-bs-toggle="modal" data-bs-target="#modalCadastroParticipante" data-bs-dismiss="modal">Não</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal / Pop-up de Cadastro do Participante -->
+    <div class="modal fade" id="modalCadastroParticipante" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cadastre-se para a Inscrição</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="participante">
+                        <div class="mb-3">
+                            <label for="nomeParticipante" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="nomeParticipante" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefone" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="telefone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="senha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="senha" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Cadastrar e Continuar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Segundo Modal: Confirmação Final da Inscrição -->
+    <div class="modal fade" id="modalConfirmarInscricao" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body">
+                    <p class="fs-5 mb-4">Deseja confirmar sua inscrição nesta atividade?</p>
+                    <button id="btnConfirmarInscricaoSim" class="btn btn-primary px-4">Sim, Confirmar</button>
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="../../Modulo B/Arquivo_JS/USUARIO SEM ACESSO/acessoSemLogar.js"></script>
+    <script type="module" src="../gerenciamentoBotoes.js"></script>
+</body>
+</html>
