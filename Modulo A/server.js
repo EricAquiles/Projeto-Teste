@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const mysql2 = require('mysql2');
 const routes = require('../Modulo B/routes.js')
 
 const app = express();
