@@ -119,7 +119,6 @@ router.post("/participante", async (req, res) => {
             })
         }
 
-        // --- ALTERADO AQUI: Capturamos o resultado da inserção ---
         const [resultado] = await pool.query(
             `insert into participantes(nome_participante, email, telefone, senha) values(?, ?, ?, ?)`, [nomeParticipante, email, telefone, senha]
         );
@@ -291,7 +290,6 @@ router.delete("/atividade/:id_atividade", async (req, res) => {
 
 // Por atividade
 
-// Por atividade
 router.get("/inscricoes/atividade/:id_atividade", async (req, res) => {
     const { id_atividade } = req.params;
     try {

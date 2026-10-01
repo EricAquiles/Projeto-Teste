@@ -1,17 +1,27 @@
-import { buscarInscricao, numeroInscricoes, descricaoSelecionada, realizarInscricao } from "../../api.js"
+import { buscarInscricao, numeroInscricoes, descricaoSelecionada, realizarInscricao } from "../../api.js";
 
+// ==========================================
+// 1. VERIFICAÇÃO DE AUTENTICAÇÃO INICIAL
+// ==========================================
 const participanteLogado = sessionStorage.getItem("participanteLogado");
-
-if(!participanteLogado){
-    alert("Acesso Negado! Faça o login novamente.")
-    window.location.replace("../loginParticipante.html")
+if (!participanteLogado) {
+    alert("Acesso Negado! Faça o login novamente.");
+    window.location.replace("../loginParticipante.html");
 }
 
+// ==========================================
+// 2. SELETORES GLOBAIS DE ELEMENTOS
+// ==========================================
 const tbody = document.getElementById('tabelaAtividade');
 const desc = document.getElementById('tabelaDescricao');
 const minhasInscricoes = document.getElementById('tabelaMinhasInscricoes');
+const btnSair = document.getElementById('btnSair');
+const btnMinhasInscricoesEl = document.getElementById('btnMinhasInscricoes');
+const btnConfirmarInscricaoEl = document.getElementById('confirmarInscricao');
 
-// Variável para controlar o modal de confirmação do participante logado
+// ==========================================
+// 3. CONTROLE DE MODAIS
+// ==========================================
 let modalInscricaoObj;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,10 +36,11 @@ window.inscrever = function() {
     if (modalInscricaoObj) {
         modalInscricaoObj.show();
     }
-}
+};
 
-// Função de Sair / Logout do Participante
-const btnSair = document.getElementById('btnSair');
+// ==========================================
+// 4. EVENTO DE LOGOUT (SAIR)
+// ==========================================
 if (btnSair) {
     btnSair.addEventListener('click', (event) => {
         event.preventDefault();
@@ -41,16 +52,18 @@ if (btnSair) {
     });
 }
 
-// Tabela de descrição das Atividades
+// ==========================================
+// 5. CARREGAR TABELA DE ATIVIDADES
+// ==========================================
 async function mostrarTabela() {
     if (!tbody) return;
     
-    try{
+    try {
         const informacoesParaParticipantes = await numeroInscricoes();
         tbody.innerHTML = "";
 
         informacoesParaParticipantes.forEach(atividade => {
-            const linhas = document.createElement('tr')
+            const linhas = document.createElement('tr');
             const vagasDisponiveis = atividade.vagas - atividade.total_inscricoes;
 
             linhas.innerHTML = `
@@ -62,88 +75,85 @@ async function mostrarTabela() {
                 </td>
             `;
 
-            const saibaMais = linhas.querySelector('.btn-saiba-mais')
-
+            const saibaMais = linhas.querySelector('.btn-saiba-mais');
             saibaMais.addEventListener('click', () => {
                 sessionStorage.setItem("atividadeSelecionada", atividade.id_atividade);
-                // Altere para caminho relativo direto a partir da pasta atual:
                 window.location.href = "descricaoAtividadeParticipante.html";
-            })
+            });
 
-            tbody.appendChild(linhas)
-        })
-    }catch (erro){
-        console.error("ERRO AO CARREGAR TABELA: ", erro)
+            tbody.appendChild(linhas);
+        });
+    } catch (erro) {
+        console.error("ERRO AO CARREGAR TABELA: ", erro);
     }
 }
-mostrarTabela()
+mostrarTabela();
 
-// Mostrar a Descrição da Atividade Selecionada
+// ==========================================
+// 6. CARREGAR DESCRIÇÃO DA ATIVIDADE SELECIONADA
+// ==========================================
 async function mostrarDescricao() {
-    const atividadeSelecionada = sessionStorage.getItem("atividadeSelecionada")
+    if (!desc) return;
+    const atividadeSelecionada = sessionStorage.getItem("atividadeSelecionada");
 
     try {
-        const resposta = await descricaoSelecionada({atividadeSelecionada});
-        if (!desc) return;
+        const resposta = await descricaoSelecionada({ atividadeSelecionada });
         desc.innerHTML = "";
 
         resposta.forEach(descricao => {
-            const linha = document.createElement('tr')
+            const linha = document.createElement('tr');
 
             linha.innerHTML = `
                 <td>${descricao.descricao}</td>
                 <td>
                     <button class="btn btn-success" onclick="inscrever()">Inscrever-se</button>
                 </td>
-            `
+            `;
             desc.appendChild(linha);
-        })   
-    }catch (erro){
-        console.error('ERRO AO CARREGAR DESCRIÇÃO: ', erro)
+        });   
+    } catch (erro) {
+        console.error('ERRO AO CARREGAR DESCRIÇÃO: ', erro);
     }
 }
-mostrarDescricao()
+mostrarDescricao();
 
-// Mostrar as Atividades inscritas
-const btnMinhasInscricoesEl = document.getElementById('btnMinhasInscricoes');
+// ==========================================
+// 7. CARREGAR MINHAS INSCRIÇÕES
+// ==========================================
 if (btnMinhasInscricoesEl) {
     btnMinhasInscricoesEl.addEventListener('click', async (event) => {
         event.preventDefault();
 
-        try{
-            const id_participante = sessionStorage.getItem("participanteLogado")
+        try {
+            const id_participante = sessionStorage.getItem("participanteLogado");
             if (!minhasInscricoes) return;
             minhasInscricoes.innerHTML = "";
 
-            // Caso a sua API em api.js já retorne o .json() tratado, usamos direto:
-// O NOVO CÓDIGO SEGURO:
-const respostaApi = await buscarInscricao({id_participante});
+            const respostaApi = await buscarInscricao({ id_participante });
+            const listaInscricoes = Array.isArray(respostaApi) ? respostaApi : (respostaApi.inscricoes || respostaApi.resultado || []);
 
-// Garante que pegamos o array de dentro, independentemente de como a API estruturou
-const listaInscricoes = Array.isArray(respostaApi) ? respostaApi : (respostaApi.inscricoes || respostaApi.resultado || []);
-
-if (listaInscricoes.length === 0) {
-    minhasInscricoes.innerHTML = `<tr><td class="text-center text-muted">Nenhuma inscrição encontrada.</td></tr>`;
-} else {
-    listaInscricoes.forEach(inscricao => {
-        const linha = document.createElement("tr")
-        // Tenta ler 'nome_atividade' ou 'nomeAtividade' dependendo do seu banco
-        const nomeAtividade = inscricao.nome_atividade || inscricao.nomeAtividade || "Atividade";
-        
-        linha.innerHTML = `
-            <td>${nomeAtividade}</td>
-        `
-        minhasInscricoes.appendChild(linha);
-    });
-}        
-        }catch (erro) {
-            console.error("ERRO PARA ACESSAR AS INSCRIÇOES DO PARTICIPANTE: ", erro)
+            if (listaInscricoes.length === 0) {
+                minhasInscricoes.innerHTML = `<tr><td class="text-center text-muted">Nenhuma inscrição encontrada.</td></tr>`;
+            } else {
+                listaInscricoes.forEach(inscricao => {
+                    const linha = document.createElement("tr");
+                    const nomeAtividade = inscricao.nome_atividade || inscricao.nomeAtividade || "Atividade";
+                    
+                    linha.innerHTML = `
+                        <td>${nomeAtividade}</td>ttdd
+                    `;
+                    minhasInscricoes.appendChild(linha);
+                });
+            }        
+        } catch (erro) {
+            console.error("ERRO PARA ACESSAR AS INSCRIÇÕES DO PARTICIPANTE: ", erro);
         }
     });
 }
 
-// Realização da inscrição do Participante
-const btnConfirmarInscricaoEl = document.getElementById('confirmarInscricao');
+// ==========================================
+// 8. REALIZAÇÃO DA INSCRIÇÃO
+// ==========================================
 if (btnConfirmarInscricaoEl) {
     btnConfirmarInscricaoEl.addEventListener('click', async (event) => {
         event.preventDefault();
@@ -151,10 +161,7 @@ if (btnConfirmarInscricaoEl) {
         const id_participante = sessionStorage.getItem("participanteLogado");
         const id_atividade = sessionStorage.getItem("atividadeSelecionada");    
 
-        const dados = {
-            id_participante,
-            id_atividade
-        }
+        const dados = { id_participante, id_atividade };
 
         try {
             const resposta = await realizarInscricao(dados);
@@ -163,14 +170,12 @@ if (btnConfirmarInscricaoEl) {
             const modalBody = document.querySelector('#modalConfirmarInscricao .modal-body');
             if (!modalBody) return;
 
-            // Se deu certo (status 200 ou 201)
             if (resposta.ok) {
                 modalBody.innerHTML = `
                     <p class="fs-5 mb-4 text-success fw-bold">${resultado.mensagem}</p>
                     <button id="btnVoltarLista" class="btn btn-primary px-4">Voltar para a Lista</button>
                 `;
             } else {
-                // Se caiu no erro de duplicidade (status 400) ou outro erro
                 modalBody.innerHTML = `
                     <p class="fs-5 mb-4 text-danger fw-bold">${resultado.mensagem || "Erro ao realizar inscrição."}</p>
                     <button id="btnVoltarLista" class="btn btn-secondary px-4">Voltar</button>

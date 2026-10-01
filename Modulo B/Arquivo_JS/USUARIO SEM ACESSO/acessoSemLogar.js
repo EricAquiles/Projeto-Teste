@@ -1,4 +1,4 @@
-import { numeroInscricoes, descricaoSelecionada, cadastrarParticipante, realizarInscricao, realizarInscricaoSemLogar } from "../../api.js";
+import { numeroInscricoes, descricaoSelecionada, cadastrarParticipante, realizarInscricaoSemLogar } from "../../api.js";
 
 // Identifica qual página está aberta no navegador pelo nome do arquivo na URL
 const paginaAtual = window.location.pathname;
