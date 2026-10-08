@@ -4,27 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
     <title>Festival Viva - Atividades Disponíveis</title>
 </head>
-<body class="container mt-5">
+<body class="">
 
-    <h1 class="mb-4">Atividades Disponíveis</h1>
-    
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Atividade</th>
-                <th>Vagas Totais</th>
-                <th>Vagas Disponíveis</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody id="tabelaAtividade"></tbody>
-    </table>
+    <!-- Cabeçalho preto centralizado e compacto -->
+    <div class="container-fluid bg-dark px-4 shadow-sm">
+        <div class="container">
+            <header class="d-flex align-items-center justify-content-center py-2 mb-0 border-bottom border-secondary">
+                <div class="d-flex align-items-center">
+                    <a href="home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                    </a>
+                </div>
+            </header>
+        </div>
+    </div>
 
-    <a href="home.html" class="btn btn-secondary mt-3">Voltar para a Home</a>
+    <!-- Conteúdo principal organizado -->
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <!-- Título e Botão de Voltar limpos -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 fw-bold text-dark">Atividades Disponíveis</h1>
+                    <a href="home.html" class="btn btn-outline-secondary btn-sm">Voltar para a Home</a>
+                </div>
 
-    <!-- CHAMANDO O SEU ARQUIVO UNIFICADO CORRETAMENTE -->
+                <!-- Tabela estruturada -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="py-3 ps-4">Atividade</th>
+                                        <th>Vagas Totais</th>
+                                        <th>Vagas Disponíveis</th>
+                                        <th class="text-end pe-4">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaAtividade">
+                                    <!-- Os dados do seu script vão carregar aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Script de carregamento -->
     <script type="module" src="../../Modulo B/Arquivo_JS/USUARIO SEM ACESSO/acessoSemLogar.js"></script>
 </body>
 </html>

@@ -4,34 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ajuste o caminho do style.css conforme a pasta onde o home.html está salvo -->
+    <link rel="stylesheet" href="../style.css">
     <title>Festival Viva</title>
 </head>
 <body class="bg-light">
 
-    <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <span class="fs-4 fw-bold">Festival Viva</span>
-            </a>
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a href="../loginAdministrador.html" class="nav-link active" aria-current="page">Login Administrativo</a>
-                </li>
-            </ul>
-        </header>
-    </div>
+  <div class="container-fluid bg-dark px-4"> <!-- container-fluid para ocupar toda a largura e bg-dark para o fundo preto -->
+      <div class="container">
+          <header class="d-flex align-items-center justify-content-between py-2 mb-0 border-bottom border-secondary">
+              
+              <!-- Logo alinhada à esquerda -->
+              <div class="d-flex align-items-center">
+                  <a href="home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                      <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                  </a>
+              </div>
+              
+              <!-- Botão menor alinhado à direita -->
+              <div class="text-end">
+                  <a href="../Acesso Administrativo/adminParticipante.html" class="btn btn-outline-light btn-sm px-3">
+                      Administrativo
+                  </a>
+              </div>
 
-    <main class="container text-center mt-5">
-        <h1 class="display-5 fw-bold mb-4">Bem-vindo ao Festival Experiência Viva!</h1>
-        <p class="lead text-muted mx-auto mb-5" style="max-width: 700px;">
-            O evento reúne visitantes, palestrantes e profissionais nas áreas de hospitalidade, gastronomia, beleza, bem-estar e inovação. Explore nossa programação, participe das atividades interativas e faça sua inscrição para aproveitar ao máximo tudo o que preparamos para estes três dias de festival.
-        </p>
+          </header>
+      </div>
+  </div>
 
-        <div class="d-gap justify-content-center gap-3">
-            <a href="listaAtividades.html" class="btn btn-primary btn-lg px-4 me-2">Inscreva-se</a>
-            <a href="../loginParticipante.html" class="btn btn-outline-dark btn-lg px-4">Já possuo cadastro</a>
-        </div>
-    </main>
+  <div class="hero-container">
+      <main class="hero-content">
+
+          <img id="logoHome" src="../Imagem/Logo Completa sem fundo.png" alt="Logo Festival Viva">
+          <h1 class="hero-title">Bem-vindo ao Festival Experiência Viva!</h1>
+          <p class="hero-text">
+              O evento reúne visitantes, palestrantes e profissionais nas áreas de hospitalidade, gastronomia, beleza, bem-estar e inovação. Explore nossa programação, participe das atividades interativas e faça sua inscrição para aproveitar ao máximo tudo o que preparamos para estes três dias de festival.
+          </p>
+
+          <div class="hero-buttons">
+              <a href="listaAtividades.html" class="btn-inscricao">Inscreva-se</a>
+              <a href="../loginParticipante.html" class="btn-cadastro">Já possuo cadastro</a>
+          </div>
+      </main>
+  </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
