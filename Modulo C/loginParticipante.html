@@ -4,26 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Festiva Viva - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Festival Viva - Login</title>
 </head>
-<body>
 
-    <div class="container mt-5" style="max-width: 400px;">
-        <h2 class="mb-4 text-center">Login do Participante</h2>
-        
-        <!-- O formulário precisa ter o id="login" -->
-        <form id="login">
-            <div class="mb-3">
-                <label for="emailLogin" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="emailLogin" required>
-            </div>
-            <div class="mb-3">
-                <label for="senhaLogin" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="senhaLogin" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Entrar</button>
-            <button type="button" id="btnVoltar" class="btn btn-secondary w-100">Voltar</button>
-        </form>
+<body class="bg-pagina-customizada">
+
+    <!-- Cabeçalho unificado reutilizando a classe customizada -->
+    <div class="container-fluid bg-black px-4">
+        <div class="container">
+            <header class="header-customizado">
+                <div class="d-flex align-items-center">
+                    <a href="home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <!-- Ajusta o caminho da imagem conforme a pasta real onde o ficheiro está guardado -->
+                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                    </a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Caixa de login centralizada num card branco elegante -->
+    <div class="container mt-5 login-box-container">
+        <div class="card shadow-sm border-0 p-4 bg-white">
+            <h2 class="mb-4 text-center text-dark fw-bold h4">Login do Participante</h2>
+            
+            <!-- O formulário precisa ter o id="login" -->
+            <form id="login">
+                <div class="mb-3">
+                    <label for="emailLogin" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="emailLogin" required>
+                </div>
+                <div class="mb-3">
+                    <label for="senhaLogin" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="senhaLogin" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-2">Entrar</button>
+                <button type="button" id="btnVoltar" class="btn btn-secondary w-100">Voltar</button>
+            </form>
+        </div>
     </div>
 
     <!-- Scripts necessários -->

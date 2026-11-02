@@ -3,39 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Festiva Viva - Gerenciar Atividades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <title>Festival Viva - Gerenciar Atividades</title>
 </head>
-<body class="bg-light">
+<body style="background-color: #EBF3FA;">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Festiva Viva - Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminParticipante.html">Participantes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminAtividade.html">Atividades</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminInscricoes.html">Inscrições</a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Cabeçalho preto unificado de ponta a ponta -->
+    <div class="container-fluid bg-black px-4 shadow-sm">
+        <div class="container">
+            <header class="d-flex align-items-center justify-content-between py-2 mb-0 border-bottom border-secondary">
+                <div class="d-flex align-items-center">
+                    <a href="../Interface Sem Acesso/home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                    </a>
+                </div>
+                <!-- Menu de Navegação Administrativo -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-black py-0">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link text-secondary" href="adminParticipante.html">Participantes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active text-white" href="adminAtividade.html">Atividades</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-secondary" href="adminInscricoes.html">Inscrições</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" href="../Interface Sem Acesso/home.html">Sair</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
         </div>
-    </nav>
+    </div>
 
     <div class="container mt-5 mb-5">
-        <h2 class="mb-4">Painel Administrativo - Gerenciar Atividades</h2>
+        <h2 class="mb-4 text-dark fw-bold">Painel Administrativo - Gerenciar Atividades</h2>
 
-        <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO -->
-        <div class="card shadow-sm p-4 mb-5">
-            <h4 class="mb-3">Cadastrar / Atualizar Atividade</h4>
+        <!-- BOTÕES DE ALTERNÂNCIA -->
+        <div class="mb-4 d-flex gap-2">
+            <button id="btnMostrarTabelaAtividade" class="btn btn-dark">Mostrar Lista de Atividades</button>
+            <button id="btnMostrarCadastroAtividade" class="btn btn-outline-dark">Cadastrar Nova Atividade</button>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO (Escondido por padrão) -->
+        <div id="secaoCadastroAtividade" class="card shadow-sm border-0 p-4 mb-5 bg-white" style="display: none;">
+            <h4 class="mb-3 text-dark">Cadastrar / Atualizar Atividade</h4>
             <form id="atividades">
                 <div class="mb-3">
                     <label for="nomeAtividade" class="form-label">Nome da Atividade</label>
@@ -55,26 +77,29 @@
         </div>
 
         <!-- TABELA DE VISUALIZAÇÃO DAS ATIVIDADES -->
-        <div class="card shadow-sm p-4">
-            <h4 class="mb-3">Lista de Atividades Cadastradas</h4>
-            <table class="table table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Descrição</th>
-                        <th>Vagas</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaAtividades">
-                    <!-- Os dados da API entram aqui via JavaScript -->
-                </tbody>
-            </table>
+        <div id="secaoTabelaAtividade" class="card shadow-sm border-0 p-4 bg-white">
+            <h4 class="mb-3 text-dark">Lista de Atividades Cadastradas</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="py-3 ps-3">Nome</th>
+                            <th>Descrição</th>
+                            <th>Vagas</th>
+                            <th class="text-end pe-3">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAtividades">
+                        <!-- Os dados da API entram aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../../Modulo B/Arquivo_JS/ADMINISTRATIVO/atividade.js"></script>
+    <script type="module" src="../gerenciamentoBotoes.js"></script>
 </body>
 </html>

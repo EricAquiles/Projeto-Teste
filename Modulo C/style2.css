@@ -1,0 +1,126 @@
+/* ==========================================
+   ESTILOS CUSTOMIZADOS - HOME & HEADER
+   ========================================== */
+
+/* Cabeçalho unificado e limpo */
+.header-customizado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--bs-secondary);
+}
+
+/* Tamanho padrão do logotipo no cabeçalho */
+#logoHeader {
+    height: 40px; 
+    width: auto;
+}
+
+/* Logo central da página inicial */
+#logoHome {
+    max-width: 250px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Container principal da Hero Page */
+.hero-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+
+/* Título e Texto descritivo */
+.hero-title {
+    font-weight: bold;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+.hero-text {
+    color: #495057;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Área de botões da página inicial */
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Estilização personalizada dos botões de ação principal */
+.hero-buttons .btn-inscricao,
+.hero-buttons .btn-cadastro {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.hero-buttons .btn-inscricao {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+.hero-buttons .btn-inscricao:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+}
+
+.hero-buttons .btn-cadastro {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.hero-buttons .btn-cadastro:hover {
+    background-color: #5c636a;
+    color: #ffffff;
+}
+
+/* ==========================================
+   PREPARAÇÃO PARA O MÓDULO D (RESPONSIVIDADE)
+   ========================================== */
+@media (max-width: 768px) {
+    /* Ajuste do cabeçalho em ecrãs pequenos (empilha logo e menu) */
+    .header-customizado {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    /* Os botões da hero page ocupam toda a largura no telemóvel para facilitar o toque */
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-buttons a {
+        width: 100%;
+    }
+
+    /* Reduz ligeiramente os paddings dos cards em mobile para aproveitar melhor o espaço da tela */
+    .card {
+        padding: 1rem !important;
+    }
+
+    /* Ajuste de margens em containers para evitar overflow lateral */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

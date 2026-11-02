@@ -4,29 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Festiva Viva - Login Administrador</title>
+    <link rel="stylesheet" href="../style.css">
+    <title>Festival Viva - Login Administrador</title>
 </head>
-<body>
+<body class="bg-pagina-customizada">
 
+    <!-- Cabeçalho preto unificado com o logo centralizado -->
+    <div class="container-fluid bg-black px-4 shadow-sm">
+        <div class="container">
+            <header class="header-customizado justify-content-center py-2 border-bottom border-secondary">
+                <div class="d-flex align-items-center">
+                    <a href="home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                    </a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Caixa de login centralizada num card branco elegante -->
     <div class="container mt-5" style="max-width: 400px;">
-        <h2 class="mb-4 text-center">Login do Administrador</h2>
-        
-        <form id="formLoginAdmin">
-            <div class="mb-3">
-                <label for="usuario" class="form-label">Usuário</label>
-                <input type="text" class="form-control" id="usuario" required>
-            </div>
+        <div class="card shadow-sm border-0 p-4 bg-white">
+            <h2 class="mb-4 text-center text-dark fw-bold h4">Login do Administrador</h2>
             
-            <div class="mb-3">
-                <label for="senha" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="senha" required>
-            </div>
+            <form id="formLoginAdmin">
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" id="usuario" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="senha" required>
+                </div>
 
-            <!-- Mensagem de Erro -->
-            <div id="msgErro" class="text-danger mb-3 fw-bold"></div>
+                <!-- Mensagem de Erro -->
+                <div id="msgErro" class="text-danger mb-3 fw-bold small"></div>
 
-            <button type="submit" id="btnConfirmarLogin" class="btn btn-dark w-100">Entrar como Administrador</button>
-        </form>
+                <button type="submit" id="btnConfirmarLogin" class="btn btn-dark w-100">Entrar como Administrador</button>
+            </form>
+        </div>
     </div>
 
     <!-- Scripts -->

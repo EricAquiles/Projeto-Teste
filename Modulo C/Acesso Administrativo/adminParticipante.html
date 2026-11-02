@@ -3,41 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Removido o integrity para evitar bloqueios de CDN, mantendo a versão 5.3.8 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
     <title>Festival Viva - Gerenciar Participantes</title>
 </head>
-<body class="bg-light">
+<body class="bg-pagina-customizada">
 
-    <!-- Menu de Navegação Administrativo -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Festival Viva - Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="adminParticipante.html">Participantes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminAtividade.html">Atividades</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminInscricoes.html">Inscrições</a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Cabeçalho preto unificado de ponta a ponta -->
+    <div class="container-fluid bg-black px-4 shadow-sm">
+        <div class="container">
+            <header class="header-customizado justify-content-between py-2 border-bottom border-secondary">
+                <div class="d-flex align-items-center">
+                    <a href="../Interface Sem Acesso/home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                    </a>
+                </div>
+                
+                <!-- Menu de Navegação Administrativo -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-black py-0">
+                    <div class="container-fluid px-0">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav gap-2">
+                                <li class="nav-item">
+                                    <a class="nav-link active fw-bold text-white" href="adminParticipante.html">Participantes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-secondary" href="adminAtividade.html">Atividades</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-secondary" href="adminInscricoes.html">Inscrições</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger fw-semibold" href="../Interface Sem Acesso/home.html">Sair</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
         </div>
-    </nav>
+    </div>
 
+    <!-- Conteúdo Principal -->
     <div class="container mt-5 mb-5">
-        <h2 class="mb-4">Painel Administrativo - Gerenciar Participantes</h2>
+        <h1 class="h3 mb-4 text-dark fw-bold">Painel Administrativo - Gerenciar Participantes</h1>
 
-        <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO -->
-        <div class="card shadow-sm p-4 mb-5">
-            <h4 class="mb-3">Cadastrar / Atualizar Participante</h4>
+        <!-- BOTÕES DE ALTERNÂNCIA -->
+        <div class="mb-4 d-flex gap-2">
+            <button id="btnMostrarTabela" class="btn btn-dark">Mostrar Lista de Participantes</button>
+            <button id="btnMostrarCadastro" class="btn btn-outline-dark">Cadastrar Novo Participante</button>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO (Oculto por padrão via Bootstrap class d-none) -->
+        <div id="secaoCadastro" class="card shadow-sm border-0 p-4 mb-5 bg-white d-none">
+            <h2 class="h5 mb-3 text-dark fw-bold">Cadastrar / Atualizar Participante</h2>
             <form id="participante">
                 <div class="mb-3">
                     <label for="nomeParticipante" class="form-label">Nome do Participante</label>
@@ -61,26 +83,29 @@
         </div>
 
         <!-- TABELA DE VISUALIZAÇÃO DOS PARTICIPANTES -->
-        <div class="card shadow-sm p-4">
-            <h4 class="mb-3">Lista de Participantes Cadastrados</h4>
-            <table class="table table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Telefone</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaParticipantes">
-                    <!-- Os dados entram aqui via JavaScript -->
-                </tbody>
-            </table>
+        <div id="secaoTabela" class="card shadow-sm border-0 p-4 bg-white">
+            <h2 class="h5 mb-3 text-dark fw-bold">Lista de Participantes Cadastrados</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="py-3 ps-3">Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th class="text-end pe-3">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaParticipantes">
+                        <!-- Os dados entram aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../../Modulo B/Arquivo_JS/ADMINISTRATIVO/participante.js"></script>
+    <script type="module" src="../gerenciamentoBotoes.js"></script>
 </body>
 </html>

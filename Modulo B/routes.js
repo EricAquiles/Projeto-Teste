@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const pool = require("../Modulo A/database.js")
 
 // Envio de Email
-
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -14,16 +13,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // Login
-
 router.post("/loginAdiminstrativo", async (req, res) => {
     const {usuario, senha} = req.body;
 
     const [linhas] = await pool.query(
-        `select * from administracao where usuario = ? and senha = ?`, [usuario, senha]
+        `select * from administrador where usuario = ? and senha = ?`, [usuario, senha]
     )
 
     if(linhas.length === 0) {
-        return await res.status(400).json({
+        return res.status(400).json({
             mensagem: 'USUÁRIO INVÁLIDO'
         })
     }
@@ -32,13 +30,11 @@ router.post("/loginAdiminstrativo", async (req, res) => {
 
     res.status(201).json({
         mensagem : 'USUÁRIO VÁLIDO',
-        id_administrador : administrador.id_administracao
+        id_administrador : administrador.id_administrador
     })
-
-})
+});
 
 // Login para Participantes
-
 router.post("/loginParticipante", async (req, res) => {
     const {email, senha} = req.body;
 
@@ -47,7 +43,7 @@ router.post("/loginParticipante", async (req, res) => {
     )
 
     if(linhas.length === 0) {
-        return await res.status(400).json({
+        return res.status(400).json({
             mensagem: 'USUÁRIO INVÁLIDO'
         })
     }
@@ -58,11 +54,9 @@ router.post("/loginParticipante", async (req, res) => {
         mensagem : 'USUÁRIO VÁLIDO',
         id_participantes : participante.id_participante
     })
-
-})
+});
 
 // Rotas para Acesso dos Usuários sem Logar
-
 router.get("/acessoSemLogar", async (req, res) => {
     try{
         const [linhas] = await pool.query(
@@ -72,7 +66,7 @@ router.get("/acessoSemLogar", async (req, res) => {
                     a.nome_atividade,
                     a.descricao,
                     a.vagas,
-                    count (i.id_inscricao) as total_inscricoes
+                    count(i.id_inscricoes) as total_inscricoes
                 from
                     atividades a
                 left join
@@ -80,14 +74,16 @@ router.get("/acessoSemLogar", async (req, res) => {
                 group by
                     a.id_atividade,
                     a.nome_atividade,
+                    a.descricao,
                     a.vagas
             `
         )
         res.json(linhas)
     }catch (erro){
         console.error("ERRO AO CARREGAR TABELA: ", erro)
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.post("/acessoSemLogar", async (req,res) => {
     try {
@@ -100,11 +96,11 @@ router.post("/acessoSemLogar", async (req,res) => {
         res.json(linha);        
     }catch (erro){
         console.error('ERRO AO REALIZAR A REQUISIÇÃO DA DESCRIÇÃO: ', erro)
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 // Rotas para Participante
-
 router.post("/participante", async (req, res) => {
     const {nomeParticipante, email, telefone, senha} = req.body;
 
@@ -123,11 +119,10 @@ router.post("/participante", async (req, res) => {
             `insert into participantes(nome_participante, email, telefone, senha) values(?, ?, ?, ?)`, [nomeParticipante, email, telefone, senha]
         );
 
-        const idGerado = resultado.insertId; // ID criado automaticamente pelo MySQL
+        const idGerado = resultado.insertId;
 
-        // --- ENVIO DO E-MAIL SIMPLES ---
         const mailOptions = {
-            from: 'seu-email@gmail.com',
+            from: 'ericaquiles29@gmail.com',
             to: email,
             subject: 'Confirmação de Cadastro - Sistema de Atividades',
             text: `Olá ${nomeParticipante},\n\nSeu cadastro foi realizado com sucesso!\n\nSeus dados de acesso:\nE-mail: ${email}\nSenha: ${senha}\n\nGuarde bem suas informações!`
@@ -135,14 +130,13 @@ router.post("/participante", async (req, res) => {
 
         await transporter.sendMail(mailOptions);
 
-        // --- ALTERADO AQUI: Enviamos o id_participantes explicitamente na resposta ---
         res.status(201).json({ 
             mensagem: 'Participante cadastrado com sucesso e e-mail enviado!',
             id_participantes: idGerado 
         });
 
     } catch (erro) {
-        console.error('ERRO AO CADASTRAR PARTICIPANTE: ', erro); // Adicionado o erro no log
+        console.error('ERRO AO CADASTRAR PARTICIPANTE: ', erro);
         res.status(500).json({ erro: "Erro interno no servidor" });
     }
 });
@@ -152,17 +146,16 @@ router.get("/participante", async (req,res) => {
         const [linhas] = await pool.query(
             `select * from participantes`
         )
-
         res.json(linhas);
-    
     } catch (erro) {
-        console.error('ERRO AO REALIZAR A REQUISIÇÃO DA TABELA')
+        console.error('ERRO AO REALIZAR A REQUISIÇÃO DA TABELA: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.put("/participante/:id_participante", async (req, res) => {
     const {id_participante} = req.params;
-    const {nomeParticipante, email,telefone} = req.body;
+    const {nomeParticipante, email, telefone} = req.body;
 
     try{
         await pool.query(
@@ -172,22 +165,22 @@ router.put("/participante/:id_participante", async (req, res) => {
             mensagem: "Participante atualizado com sucesso!"
         })
     }catch (erro) {
-        console.error('ERRO AO ATUALIZAR PARTICIPANTE: ', erro)
+        console.error('ERRO AO ATUALIZAR PARTICIPANTE: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.delete("/participante/:id_participante", async (req, res) => {
     const {id_participante} = req.params;
 
     try{
-
         const [linhas] = await pool.query(
             `select * from inscricoes where id_participante = ?`,[id_participante]
         )
 
         if(linhas.length > 0){
             return res.status(400).json({
-                mensagem: "ESTE PARTICIPANTE POSSUI INSCRIÇÃO EM ALGUMA ATIVIDADE, EXCLUA TODAS AS INSCRIÇÕES DELE PARA PROSSEGUIR "
+                mensagem: "ESTE PARTICIPANTE POSSUI INSCRIÇÃO EM ALGUMA ATIVIDADE, EXCLUA TODAS AS INSCRIÇÕES DELE PARA PROSSEGUIR"
             })
         }
 
@@ -199,12 +192,12 @@ router.delete("/participante/:id_participante", async (req, res) => {
             mensagem: 'Participante excluido com sucesso'
         })
     }catch(erro) {
-        console.error('ERRO AO EXCLUIR PARTICIPANTE: ', erro)
+        console.error('ERRO AO EXCLUIR PARTICIPANTE: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 // Rotas para Atividade
-
 router.post("/atividade", async (req, res) => {
     const { nomeAtividade, descricao, vagas } = req.body;
 
@@ -226,22 +219,22 @@ router.post("/atividade", async (req, res) => {
             mensagem : "Atividade cadastrada com sucesso!"
         })
     }catch (erro){
-        console.error('ERRO AO CADASTRAR ATIVIDADE: ', erro)
+        console.error('ERRO AO CADASTRAR ATIVIDADE: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.get("/atividade", async (req, res) => {
-
     try{
         const [linhas] = await pool.query(
             `select * from atividades`
         )
-
         res.json(linhas)
     }catch (erro){
-        console.error('ERRO AO CARREGAR ATIVIDADES: ', erro)
+        console.error('ERRO AO CARREGAR ATIVIDADES: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.put("/atividade/:id_atividade", async (req, res) => {
     const {id_atividade} = req.params;
@@ -256,22 +249,22 @@ router.put("/atividade/:id_atividade", async (req, res) => {
             mensagem : "Atividade atualizada com sucesso!"
         })
     }catch (erro) {
-        console.error('ERRO AO ATUALIZAR A ATIVIDADE: ', erro)
+        console.error('ERRO AO ATUALIZAR A ATIVIDADE: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.delete("/atividade/:id_atividade", async (req, res) => {
     const {id_atividade} = req.params;
 
     try{
-
         const [existe] = await pool.query(
             `select * from inscricoes where id_atividade = ?`,[id_atividade]
         )
 
         if(existe.length > 0 ){
             return res.status(400).json({
-                mensagem: "Está atividade tem participantes inscritos"
+                mensagem: "Esta atividade tem participantes inscritos"
             })
         }
 
@@ -279,23 +272,21 @@ router.delete("/atividade/:id_atividade", async (req, res) => {
             `delete from atividades where id_atividade = ?`, [id_atividade]
         )
         res.json({
-            mensagem : "Atividade excluido com sucesso"
+            mensagem : "Atividade excluida com sucesso"
         })
     }catch (erro) {
-        console.error('ERRO AO EXCLUIR A ATIVIDADE: ', erro)
+        console.error('ERRO AO EXCLUIR A ATIVIDADE: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
-// Rotas para Inscrições
-
-// Por atividade
-
+// Rotas para Inscrições (Por Atividade)
 router.get("/inscricoes/atividade/:id_atividade", async (req, res) => {
     const { id_atividade } = req.params;
     try {
         const [linhas] = await pool.query(
             `select 
-                i.id_inscricao, 
+                i.id_inscricoes, 
                 p.nome_participante, 
                 p.email, 
                 a.nome_atividade 
@@ -318,7 +309,7 @@ router.get("/inscricoes/participante", async (req, res) => {
     try {
         const [linhas] = await pool.query(
             `select 
-                i.id_inscricao, 
+                i.id_inscricoes, 
                 p.nome_participante, 
                 p.email, 
                 a.nome_atividade 
@@ -335,32 +326,14 @@ router.get("/inscricoes/participante", async (req, res) => {
     }
 });
 
-// Exemplo da rota que busca inscrições (ajuste conforme a sua)
-router.get('/inscricoes/atividade/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const [linhas] = await pool.query(
-            `SELECT i.id_inscricao, p.nome_participante, p.email, a.nome_atividade 
-             FROM inscricoes i
-             JOIN participantes p ON i.id_participante = p.id_participante
-             JOIN atividades a ON i.id_atividade = a.id_atividade
-             WHERE i.id_atividade = ?`, 
-            [id]
-        );
-        res.json(linhas);
-    } catch (erro) {
-        res.status(500).json({ erro: "Erro ao listar inscrições" });
-    }
-});
-
-// Rota para deletar uma inscrição pelo ID
-router.delete("/inscricoes/:id_inscricao", async (req, res) => {
-    const { id_inscricao } = req.params;
+// Rota para deletar uma inscrição pelo ID correto (`id_inscricoes`)
+router.delete("/inscricoes/:id_inscricoes", async (req, res) => {
+    const { id_inscricoes } = req.params;
 
     try {
         const [resultado] = await pool.query(
-            `DELETE FROM inscricoes WHERE id_inscricao = ?`, 
-            [id_inscricao]
+            `DELETE FROM inscricoes WHERE id_inscricoes = ?`, 
+            [id_inscricoes]
         );
 
         if (resultado.affectedRows === 0) {
@@ -377,7 +350,6 @@ router.delete("/inscricoes/:id_inscricao", async (req, res) => {
 });
 
 // Participante Logado
-
 router.post("/participanteInscricao", async (req, res) => {
     const {id_participante} = req.body;
 
@@ -385,17 +357,20 @@ router.post("/participanteInscricao", async (req, res) => {
         const [linhas] = await pool.query(
             `
                 SELECT 
+                    i.id_inscricoes,
+                    a.id_atividade,
                     a.nome_atividade
                 FROM inscricoes i
                 JOIN atividades a ON i.id_atividade = a.id_atividade
                 WHERE i.id_participante = ?
             `, [id_participante]
         )   
-        res.json(linhas)     
+        res.json(linhas)    
     }catch (erro){
-        console.error("ERRO AO TRAZER AS INCRIÇOES DO PARTICIPANTE: ", erro)
+        console.error("ERRO AO TRAZER AS INSCRIÇOES DO PARTICIPANTE: ", erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 router.post("/participanteInscricao/salvar", async (req,res) => {
     const {id_atividade, id_participante} = req.body;
@@ -419,8 +394,9 @@ router.post("/participanteInscricao/salvar", async (req,res) => {
             mensagem: "INSCRIÇÃO REALIZADA COM SUCESSO"
         })
     }catch (erro){
-        console.error('ERRO AO REALIZAR INSCRIÇÃO: ', erro)
+        console.error('ERRO AO REALIZAR INSCRIÇÃO: ', erro);
+        res.status(500).json({ erro: "Erro interno no servidor" });
     }
-})
+});
 
 module.exports = router;
