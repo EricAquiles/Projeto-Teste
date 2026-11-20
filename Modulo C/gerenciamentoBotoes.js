@@ -1,18 +1,13 @@
-// --- 1. GESTÃO DO MODAL DO BOOTSTRAP (Para páginas de atividades) ---
+// --- 1. GESTÃO DO MODAL DO BOOTSTRAP ---
 let meuModal;
-
 window.addEventListener("DOMContentLoaded", () => {
     const elementoModal = document.getElementById("meuPopup");
-    if (elementoModal) {
-        meuModal = new bootstrap.Modal(elementoModal);
-    }
+    if (elementoModal) meuModal = new bootstrap.Modal(elementoModal);
 });
 
-window.abrirPopup = function() {
-    meuModal?.show();
-};
+window.abrirPopup = () => meuModal?.show();
 
-window.responder = function(possuiCadastro) {
+window.responder = (possuiCadastro) => {
     window.location.href = possuiCadastro ? "loginParticipante.html" : "cadastro.html";
 };
 
@@ -24,90 +19,80 @@ document.addEventListener('click', (event) => {
 });
 
 
-// --- 2. ALTERNÂNCIA ENTRE ATIVIDADES E MINHAS INSCRIÇÕES ---
+// --- 2. FUNÇÃO GENÉRICA DE ALTERNÂNCIA (Para secções ou painéis) ---
+// Evita repetir o código de esconder/mostrar e trocar classes de botões
+const configurarAlternancia = (btnA, btnB, secaoA, secaoB, acaoAVisivel) => {
+    if (!btnA || !btnB || !secaoA || !secaoB) return;
+
+    const alternar = (mostrarA) => {
+        // Alterna visibilidade usando a classe d-none do Bootstrap
+        secaoA.classList.toggle('d-none', !mostrarA);
+        secaoB.classList.toggle('d-none', mostrarA);
+
+        // Alterna estilos dos botões ativos/outline
+        btnA.className = mostrarA ? 'btn btn-dark' : 'btn btn-outline-dark';
+        btnB.className = mostrarA ? 'btn btn-outline-dark' : 'btn btn-dark';
+    };
+
+    btnA.addEventListener('click', (e) => { e.preventDefault(); alternar(true); });
+    btnB.addEventListener('click', (e) => { e.preventDefault(); alternar(false); });
+
+    return alternar; // Retorna caso queira chamar via global
+};
+
+
+// --- 3. APLICAR NAS TABS / PAINÉIS ---
 document.addEventListener("DOMContentLoaded", () => {
+
+    // A. Atividades vs Minhas Inscrições (Área do Utilizador)
     const btnMinhasInscricoes = document.getElementById('btnMinhasInscricoes');
     const btnVoltarAtividades = document.getElementById('btnVoltarAtividades');
     const secaoAtividades = document.getElementById('secaoAtividades');
     const secaoMinhasInscricoes = document.getElementById('secaoMinhasInscricoes');
 
     if (btnMinhasInscricoes && btnVoltarAtividades && secaoAtividades && secaoMinhasInscricoes) {
-        const alternarSecoesAtividades = (mostrarInscricoes) => {
-            secaoAtividades.style.display = mostrarInscricoes ? "none" : "block";
-            secaoMinhasInscricoes.style.display = mostrarInscricoes ? "block" : "none";
-            btnMinhasInscricoes.style.display = mostrarInscricoes ? "none" : "inline-block";
-            btnVoltarAtividades.style.display = mostrarInscricoes ? "inline-block" : "none";
-        };
-
-        btnMinhasInscricoes.addEventListener('click', (event) => {
-            event.preventDefault();
-            alternarSecoesAtividades(true);
+        btnMinhasInscricoes.addEventListener('click', (e) => {
+            e.preventDefault();
+            secaoAtividades.classList.add('d-none');
+            secaoMinhasInscricoes.classList.remove('d-none');
+            btnMinhasInscricoes.style.display = 'none';
+            btnVoltarAtividades.style.display = 'inline-block';
         });
 
-        btnVoltarAtividades.addEventListener('click', (event) => {
-            event.preventDefault();
-            alternarSecoesAtividades(false);
+        btnVoltarAtividades.addEventListener('click', (e) => {
+            e.preventDefault();
+            secaoAtividades.classList.remove('d-none');
+            secaoMinhasInscricoes.classList.add('d-none');
+            btnMinhasInscricoes.style.display = 'inline-block';
+            btnVoltarAtividades.style.display = 'none';
         });
+    }
+
+    // B. Painel Administrativo - Participantes
+    const altParticipantes = configurarAlternancia(
+        document.getElementById('btnMostrarTabela'),
+        document.getElementById('btnMostrarCadastro'),
+        document.getElementById('secaoTabela'),
+        document.getElementById('secaoCadastro'),
+        true
+    );
+    
+    if (altParticipantes) {
+        window.visualizarTabelaParticipante = () => altParticipantes(true);
+        window.paginaCadastroParticipante = () => altParticipantes(false);
+    }
+
+    // C. Painel Administrativo - Atividades
+    const altAtividades = configurarAlternancia(
+        document.getElementById('btnMostrarTabelaAtividade'),
+        document.getElementById('btnMostrarCadastroAtividade'),
+        document.getElementById('secaoTabelaAtividade'),
+        document.getElementById('secaoCadastroAtividade'),
+        true
+    );
+
+    if (altAtividades) {
+        window.visualizarTabelaAtividade = () => altAtividades(true);
+        window.paginaCadastroAtividade = () => altAtividades(false);
     }
 });
-
-
-// --- 3. ALTERNÂNCIA ENTRE TABELA E CADASTRO (Painel Administrativo de Participantes) ---
-const secaoCadastro = document.getElementById('secaoCadastro');
-const secaoTabela = document.getElementById('secaoTabela');
-const btnMostrarCadastro = document.getElementById('btnMostrarCadastro');
-const btnMostrarTabela = document.getElementById('btnMostrarTabela');
-
-function alternarTelaParticipantes(mostrarCadastro) {
-    if (!secaoCadastro || !secaoTabela) return;
-
-    if (mostrarCadastro) {
-        secaoCadastro.style.display = 'block';
-        secaoTabela.style.display = 'none';
-        if (btnMostrarCadastro) btnMostrarCadastro.className = 'btn btn-dark';
-        if (btnMostrarTabela) btnMostrarTabela.className = 'btn btn-outline-dark';
-    } else {
-        secaoCadastro.style.display = 'none';
-        secaoTabela.style.display = 'block';
-        if (btnMostrarTabela) btnMostrarTabela.className = 'btn btn-dark';
-        if (btnMostrarCadastro) btnMostrarCadastro.className = 'btn btn-outline-dark';
-    }
-}
-
-// Funções globais chamadas pelo participante.js (ao editar ou salvar registos)
-window.paginaCadastroParticipante = () => alternarTelaParticipantes(true);
-window.visualizarTabelaParticipante = () => alternarTelaParticipantes(false);
-
-// Eventos de clique nos botões do painel de participantes
-btnMostrarCadastro?.addEventListener('click', () => alternarTelaParticipantes(true));
-btnMostrarTabela?.addEventListener('click', () => alternarTelaParticipantes(false));
-
-// --- ALTERNÂNCIA ENTRE TABELA E CADASTRO (Painel Administrativo de Atividades) ---
-const secaoCadastroAtividade = document.getElementById('secaoCadastroAtividade');
-const secaoTabelaAtividade = document.getElementById('secaoTabelaAtividade');
-const btnMostrarCadastroAtividade = document.getElementById('btnMostrarCadastroAtividade');
-const btnMostrarTabelaAtividade = document.getElementById('btnMostrarTabelaAtividade');
-
-function alternarTelaAtividades(mostrarCadastro) {
-    if (!secaoCadastroAtividade || !secaoTabelaAtividade) return;
-
-    if (mostrarCadastro) {
-        secaoCadastroAtividade.style.display = 'block';
-        secaoTabelaAtividade.style.display = 'none';
-        if (btnMostrarCadastroAtividade) btnMostrarCadastroAtividade.className = 'btn btn-dark';
-        if (btnMostrarTabelaAtividade) btnMostrarTabelaAtividade.className = 'btn btn-outline-dark';
-    } else {
-        secaoCadastroAtividade.style.display = 'none';
-        secaoTabelaAtividade.style.display = 'block';
-        if (btnMostrarTabelaAtividade) btnMostrarTabelaAtividade.className = 'btn btn-dark';
-        if (btnMostrarCadastroAtividade) btnMostrarCadastroAtividade.className = 'btn btn-outline-dark';
-    }
-}
-
-// Funções globais exigidas pelo atividade.js (ao editar registos)
-window.paginaCadastroAtividade = () => alternarTelaAtividades(true);
-window.visualizarTabelaAtividade = () => alternarTelaAtividades(false);
-
-// Eventos de clique nos botões do painel de atividades
-btnMostrarCadastroAtividade?.addEventListener('click', () => alternarTelaAtividades(true));
-btnMostrarTabelaAtividade?.addEventListener('click', () => alternarTelaAtividades(false));
