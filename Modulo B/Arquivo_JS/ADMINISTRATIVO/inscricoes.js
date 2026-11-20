@@ -30,11 +30,11 @@ const grupoParticipante = document.getElementById('grupoParticipante');
 radios.forEach(radio => {
     radio.addEventListener('change', (e) => {
         if (e.target.value === 'atividade') {
-            grupoAtividade.style.display = 'block';
-            grupoParticipante.style.display = 'none';
+            grupoAtividade.classList.remove('d-none');
+            grupoParticipante.classList.add('d-none');
         } else {
-            grupoAtividade.style.display = 'none';
-            grupoParticipante.style.display = 'block';
+            grupoAtividade.classList.add('d-none');
+            grupoParticipante.classList.remove('d-none');
         }
     });
 });

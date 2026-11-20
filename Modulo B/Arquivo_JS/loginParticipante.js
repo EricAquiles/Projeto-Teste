@@ -34,7 +34,7 @@ const btnVoltar = document.getElementById('btnVoltar');
 if (btnVoltar) {
     btnVoltar.addEventListener('click', (event) => {
         event.preventDefault();
-        // Redireciona para a página inicial (ajuste o caminho se necessário para a sua estrutura)
-        window.location.replace("../../Modulo C/Interface Sem Acesso/home.html");
+        // Como loginParticipante.html está em /Modulo C/, o caminho relativo correto é:
+        window.location.href = "Interface Sem Acesso/home.html";
     });
 }

@@ -11,44 +11,44 @@
 <body class="bg-pagina-customizada">
 
     <!-- Cabeçalho unificado reutilizando a classe customizada -->
-    <div class="container-fluid bg-black px-4">
+    <div class="container-fluid bg-black px-4 shadow-sm">
         <div class="container">
             <header class="header-customizado">
                 <div class="d-flex align-items-center">
                     <a href="home.html" class="d-inline-flex link-body-emphasis text-decoration-none">
-                        <!-- Ajusta o caminho da imagem conforme a pasta real onde o ficheiro está guardado -->
-                        <img id="logoHeader" src="../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
+                        <!-- Ajuste o caminho conforme a localização real da pasta Imagem -->
+                        <img id="logoHeader" src="../../Imagem/Logo só imagem sem fundo.png" alt="Festival Viva">
                     </a>
                 </div>
             </header>
         </div>
     </div>
 
-    <!-- Caixa de login centralizada num card branco elegante -->
-    <div class="container mt-5 login-box-container">
-        <div class="card shadow-sm border-0 p-4 bg-white">
+    <!-- Caixa de login centralizada num card branco -->
+    <div class="container mt-5 mb-5 d-flex justify-content-center login-box-container">
+        <div class="card shadow-sm border-0 p-4 bg-white w-100" style="max-width: 420px; border-radius: 12px;">
             <h2 class="mb-4 text-center text-dark fw-bold h4">Login do Participante</h2>
-            
-            <!-- O formulário precisa ter o id="login" -->
+
+            <!-- Área de feedback visual (opcional, caso queira usar no JS) -->
+            <div id="mensagemErro" class="alert alert-danger d-none py-2 small" role="alert"></div>
+
             <form id="login">
                 <div class="mb-3">
-                    <label for="emailLogin" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="emailLogin" required>
+                    <label for="emailLogin" class="form-label fw-semibold">E-mail ou Usuário</label>
+                    <input type="text" class="form-control" id="emailLogin" placeholder="Digite seu e-mail ou usuário" required>
                 </div>
-                <div class="mb-3">
-                    <label for="senhaLogin" class="form-label">Senha</label>
-                    <input type="password" class="form-control" id="senhaLogin" required>
+                <div class="mb-4">
+                    <label for="senhaLogin" class="form-label fw-semibold">Senha</label>
+                    <input type="password" class="form-control" id="senhaLogin" placeholder="Digite sua senha" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 mb-2">Entrar</button>
-                <button type="button" id="btnVoltar" class="btn btn-secondary w-100">Voltar</button>
+                <button type="submit" class="btn btn-primary w-100 mb-2 fw-semibold">Entrar</button>
+                <button type="button" id="btnVoltar" class="btn btn-outline-secondary w-100">Voltar</button>
             </form>
         </div>
     </div>
 
     <!-- Scripts necessários -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
-    <!-- Importante: type="module" é obrigatório aqui porque o seu JS usa import/export -->
     <script type="module" src="../Modulo B/Arquivo_JS/loginParticipante.js"></script>
 </body>
 </html>

@@ -1,38 +1,44 @@
 import { confirmarLogin } from "../api.js";
 
-document.getElementById('btnConfirmarLogin').addEventListener('click', async (event) => {
-    event.preventDefault();
+// Botão Voltar (ajuste o caminho se home.html estiver em outra pasta)
+const btnVoltar = document.getElementById('btnVoltar');
+if (btnVoltar) {
+    btnVoltar.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = "Interface Sem Acesso/home.html";
+    });
+}
 
-    const mensagemErro = document.getElementById('msgErro');
-    mensagemErro.textContent = ""; // Limpa erros anteriores
+// Envio do formulário de login
+const formLoginAdmin = document.getElementById('formLoginAdmin');
+if (formLoginAdmin) {
+    formLoginAdmin.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-    const usuario = document.getElementById('usuario').value;
-    const senha = document.getElementById('senha').value;
+        const mensagemErro = document.getElementById('msgErro');
+        mensagemErro.textContent = "";
 
-    if (!usuario || !senha) {
-        mensagemErro.textContent = "Preencha os campos";
-        return;
-    }
+        const usuario = document.getElementById('usuario').value.trim();
+        const senha = document.getElementById('senha').value;
 
-    const dados = {
-        usuario,
-        senha
-    };
-
-    try {
-        const resposta = await confirmarLogin(dados);
-        const resultado = await resposta.json();
-        
-        if (resposta.status === 200 || resposta.status === 201) {
-            sessionStorage.setItem("usuarioLogado", JSON.stringify(resultado.id_administracao));
-            // Caminho corrigido a partir da raiz do projeto (onde o loginAdministrador.html está localizado)
-            window.location.replace("../../Modulo C/Acesso Administrativo/adminParticipante.html");
-        } else {
-            mensagemErro.textContent = 'Usuário ou senha inválido. Tente novamente';
+        if (!usuario || !senha) {
+            mensagemErro.textContent = "Preencha os campos";
+            return;
         }
 
-    } catch (erro) {
-        console.error('ERRO AO VALIDAR LOGIN: ', erro);
-        mensagemErro.textContent = 'Erro de conexão com o servidor.';
-    }
-});
+        try {
+            const resultado = await confirmarLogin({ usuario, senha });
+            const idAdmin = resultado?.id_administracao ?? resultado?.id_administrador;
+
+            if (idAdmin) {
+                sessionStorage.setItem("usuarioLogado", JSON.stringify(idAdmin));
+                window.location.href = "Acesso Administrativo/adminParticipante.html";
+            } else {
+                mensagemErro.textContent = resultado?.mensagem || "Usuário ou senha inválido. Tente novamente";
+            }
+        } catch (erro) {
+            console.error('ERRO AO VALIDAR LOGIN: ', erro);
+            mensagemErro.textContent = 'Erro de conexão com o servidor.';
+        }
+    });
+}
